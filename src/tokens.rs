@@ -1,3 +1,11 @@
+#[derive(Debug, Clone, PartialEq)]
+pub enum Literal {
+    Number(f64),
+    Str(String),
+    Bool(bool),
+    Nil,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TokenType {
     // Single-character tokens
@@ -49,3 +57,21 @@ pub enum TokenType {
     Eof,
 }
 
+#[derive(Debug, Clone)]
+pub struct Token {
+    pub token_type: TokenType,
+    pub lexeme: String,
+    pub literal: Option<Literal>,
+    pub line: usize,
+}
+
+impl Token {
+    pub fn new(token_type: TokenType, lexeme: String, literal: Option<Literal>, line: usize) -> Self {
+        Self {
+            token_type,
+            lexeme,
+            literal,
+            line,
+        }
+    }
+}
