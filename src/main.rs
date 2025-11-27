@@ -2,7 +2,7 @@ use rlox::*;
 
 fn main ( ) -> Result<(),rlox::io::Error> {
     let args  : Vec<String> = rlox::env::args().collect();
-    if args.len() < 1 {
+    if args.is_empty() {
         println!("Usages : rlox [script]");
         process::exit(64);
     } else if args.len() == 2 {

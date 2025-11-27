@@ -26,16 +26,16 @@ pub fn run_prompt( ) {
         if expression_buffer == "quit" || expression_buffer == "exit" || expression_buffer.is_empty(){
             break;
         }  
-        run(&expression_buffer.to_string());
+        run(expression_buffer);
     }
 }
 
 
-pub fn run (file_content_source : &String)  {
+pub fn run (file_content_source : &str)  {
     for words in file_content_source.split_whitespace()  {
         print!("{words} ");
     }
-    println!("");
+    println!();
 }
 
 pub fn err(line: i64, message: &str) {
