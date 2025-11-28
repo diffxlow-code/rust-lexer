@@ -5,9 +5,12 @@ pub use std::process;
 pub use std::fs;
 
 
-pub fn run_file(filename : &String) -> Result<(),io::Error> {
+
+pub fn run_file(filename : &String,had_error : bool) -> Result<(),io::Error> {
     let file_content  = fs::read_to_string(filename)?;
     run(&file_content);
+
+    if had_error  {process::exit(65)};
     Ok(())
 }
 
@@ -27,6 +30,7 @@ pub fn run_prompt( ) {
             break;
         }  
         run(expression_buffer);
+        
     }
 }
 
