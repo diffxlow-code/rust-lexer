@@ -2,16 +2,16 @@ use crate::tokens::{Token};
 use crate::tokens::TokenType;
 
 #[derive(Debug)]
-struct Scanner {
-    source : String,
-    tokens : Vec<Token>,
-    start : usize,
-    current : usize,
-    line : usize, 
+pub struct Scanner {
+    pub source : String,
+    pub tokens : Vec<Token>,
+    pub start : usize,
+    pub current : usize,
+    pub line : usize, 
 } 
 
-impl Scanner {
-    fn new ( source : String ) -> Self {
+ impl Scanner {
+    pub fn new ( source : String ) -> Self {
         Self {
             source : source,
             tokens : Vec::new(),

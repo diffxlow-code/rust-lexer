@@ -3,10 +3,11 @@ pub use std::env;
 pub use std::io::Write;
 pub use std::process;
 pub use std::fs;
-pub mod tokens;
 pub mod scanner;
+pub mod tokens;
 
 
+use scanner::Scanner;
 
 pub fn run_file(file_name : &String,had_error : bool) -> Result<(),io::Error> {
     let file_content  = fs::read_to_string(file_name)?;
@@ -39,7 +40,9 @@ pub fn run_prompt( ) {
 
 pub fn run (file_content_source : &str)  {
     for words in file_content_source.split_whitespace()  {
-        print!("{words} ");
+        let mut scanner = Scanner::new(words.to_string());
+        Scanner::scan_tokens(&mut scanner);
+        println!("{:?}",scanner);
     }
     println!();
 }
