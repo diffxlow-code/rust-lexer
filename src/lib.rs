@@ -3,11 +3,13 @@ pub use std::env;
 pub use std::io::Write;
 pub use std::process;
 pub use std::fs;
+pub mod tokens;
+pub mod scanner;
 
 
 
-pub fn run_file(filename : &String,had_error : bool) -> Result<(),io::Error> {
-    let file_content  = fs::read_to_string(filename)?;
+pub fn run_file(file_name : &String,had_error : bool) -> Result<(),io::Error> {
+    let file_content  = fs::read_to_string(file_name)?;
     run(&file_content);
 
     if had_error  {process::exit(65)};
