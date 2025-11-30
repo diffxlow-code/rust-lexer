@@ -19,23 +19,23 @@ pub fn run_file(file_name: &String, had_error: bool) -> Result<(), io::Error> {
 }
 
 pub fn run_prompt() {
-    let mut expression_buffer: String = String::new();
+    let mut input_buffer: String = String::new();
     loop {
-        expression_buffer.clear();
+        input_buffer.clear();
         print!("> ");
         io::stdout().flush().unwrap();
-        let n = io::stdin().read_line(&mut expression_buffer).unwrap();
+        let n = io::stdin().read_line(&mut input_buffer).unwrap();
         if n == 0 {
             break;
         }
-        let expression_buffer = expression_buffer.trim();
-        if expression_buffer == "quit"
-            || expression_buffer == "exit"
-            || expression_buffer.is_empty()
+        let input_buffer = input_buffer.trim();
+        if input_buffer == "quit"
+            || input_buffer == "exit"
+            || input_buffer.is_empty()
         {
             break;
         }
-        run(expression_buffer);
+        run(input_buffer);
     }
 }
 
