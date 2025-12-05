@@ -1,0 +1,4 @@
+value x = 5;
+yedi x = 5 xa_vane wa x = 6 xa vane {
+    lekh "5 wa 6 xa";
+}
