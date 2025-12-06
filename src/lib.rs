@@ -72,7 +72,7 @@ pub fn run(file_content_source: &str) {
     let tokens  =  Scanner::scan_tokens(&mut scanner);
 
     for token in tokens {
-        println!("{token:?}");
+        println!("line : {:<4} lexeme : {:<30} token_emitted :  {:<10}", token.line, token.lexeme,token.token_type);
     }
 }
 

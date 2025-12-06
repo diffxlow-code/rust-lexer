@@ -21,7 +21,7 @@ impl Scanner {
         Self {
             source,
             tokens: Vec::new(),
-            start: 1,
+            start: 0,
             current: 0,
             line: 1,
         }
@@ -33,7 +33,7 @@ impl Scanner {
             self.scan_token();
         }
         self.tokens
-            .push(Token::new(TokenType::Eof,String::new(), None, self.line));
+            .push(Token::new(TokenType::Eof,String::from("EOF"), None, self.line));
         self.tokens.clone()
     }
 
@@ -46,32 +46,32 @@ impl Scanner {
         match character {
             ' ' | '\r' | '\t'  => {},
             '(' => {
-                self.tokens.push(Token::new(TokenType::LeftParen, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::LeftParen, String::from("("), None, self.line));
             }
 
             ')' => {
-                self.tokens.push(Token::new(TokenType::RightParen, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::RightParen, String::from("("), None, self.line));
             }
             '{' => {
-                self.tokens.push(Token::new(TokenType::RightBrace, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::RightBrace, String::from("{"), None, self.line));
             }
             '}' => {
-                self.tokens.push(Token::new(TokenType::LeftBrace, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::LeftBrace, String::from("}"), None, self.line));
             }
             ',' => {
-                self.tokens.push(Token::new(TokenType::Comma, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::Comma, String::from(","), None, self.line));
             }
             '-' => {
-                self.tokens.push(Token::new(TokenType::Minus, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::Minus, String::from("_"), None, self.line));
             }
             '+' => {
-                self.tokens.push(Token::new(TokenType::Plus, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::Plus, String::from("+"), None, self.line));
             }
             ';' => {
-                self.tokens.push(Token::new(TokenType::Semicolon, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::Semicolon, String::from(";"), None, self.line));
             }
             '*' => {
-                self.tokens.push(Token::new(TokenType::Star, String::new(), None, self.line));
+                self.tokens.push(Token::new(TokenType::Star, String::from("*"), None, self.line));
             }
             '\n' => self.line +=  1 ,
             'a'..='z' | 'A'..='Z' => self.identifier(),
@@ -84,18 +84,21 @@ impl Scanner {
     }
     
     pub fn scan_string_literal(&mut self) {
-        while self.peek().is_ascii_alphabetic() || self.peek() == '_' {
+        while self.peek() != '"' && !self.is_at_end(){
+            if self.peek() == '\n' { self.line += 1 }
             self.advance();
         }
-        let lexeme = &self.source[self.start + 1..self.current];
-        let lexeme = lexeme.to_string();
 
-        self.tokens.push(
-            Token::new(TokenType::Str, 
-                lexeme.clone(),
-                Some(Literal::Str(lexeme)),
-                self.line)
-        );
+        if self.is_at_end() {
+            err(self.line, "Unterminated String");
+            return;
+        }
+
+        self.advance();
+
+        let source_str = &self.source[self.start + 1..self.current - 1].to_string();
+
+        self.tokens.push(Token::new(TokenType::Str, source_str.clone(), Some(Literal::Str(source_str.clone())), self.line));
     }
     pub fn identifier(&mut self ) {
         while self.peek().is_ascii_alphanumeric() || self.peek() == '_' || self.peek() == '"'{
@@ -209,7 +212,7 @@ impl Scanner {
         while self.peek().is_ascii_digit() {
             self.advance();
         }
-        let parsed_num = &self.source[self.start..self.current];
+        let parsed_num = &self.source[self.start + 1 ..self.current - 1];
         if let Ok(n) = parsed_num.parse::<f64>() {
         self.tokens.push(Token::new(TokenType::Number, 
                 parsed_num.to_string(), 
@@ -230,6 +233,9 @@ impl Scanner {
     }
 
     pub fn advance (&mut self) -> char {
+        if self.is_at_end() {
+            return '\0';
+        }
         let byte = self.source.as_bytes()[self.current];
         self.current += 1;
         byte as char
