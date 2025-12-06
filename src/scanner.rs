@@ -135,7 +135,7 @@ impl Scanner {
                          self.line));
              },
 
-             "sathi" => {
+             "jhut" => {
                  self.tokens.push(Token::new(TokenType::Fun, 
                          lexeme.to_string(),
                          None,

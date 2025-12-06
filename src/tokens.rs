@@ -128,7 +128,7 @@ impl fmt::Display for TokenType {
 
             TokenType::Eof => "EOF",
         };
-        write!(f, "{}", s)
+        write!(f, "{s}")
     }
 }
 
