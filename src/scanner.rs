@@ -9,7 +9,7 @@ use crate::tokens::TokenType;
 #[derive(Debug)]
 pub struct Scanner<'a> {
     pub source: &'a str,
-    pub tokens: Vec<Token>,
+    pub tokens: Vec<Token<'a>>,
     pub start: usize,
     pub current: usize,
     pub line: usize,
@@ -27,13 +27,13 @@ impl<'a> Scanner<'a> {
         }
     }
 
-    pub fn scan_tokens(&mut self) -> Vec<Token> {
+    pub fn scan_tokens(&mut self) -> Vec<Token<'a>> {
         while !self.is_at_end() {
             self.start = self.current;
             self.scan_token();
         }
         self.tokens
-            .push(Token::new(TokenType::Eof,String::from("EOF"), None, self.line));
+            .push(Token::new(TokenType::Eof,"EOF", None, self.line));
         self.tokens.clone()
     }
 
@@ -46,32 +46,32 @@ impl<'a> Scanner<'a> {
         match character {
             ' ' | '\r' | '\t'  => {},
             '(' => {
-                self.tokens.push(Token::new(TokenType::LeftParen, String::from("("), None, self.line));
+                self.tokens.push(Token::new(TokenType::LeftParen, "(", None, self.line));
             }
 
             ')' => {
-                self.tokens.push(Token::new(TokenType::RightParen, String::from("("), None, self.line));
+                self.tokens.push(Token::new(TokenType::RightParen, "(", None, self.line));
             }
             '{' => {
-                self.tokens.push(Token::new(TokenType::RightBrace, String::from("{"), None, self.line));
+                self.tokens.push(Token::new(TokenType::RightBrace, "{", None, self.line));
             }
             '}' => {
-                self.tokens.push(Token::new(TokenType::LeftBrace, String::from("}"), None, self.line));
+                self.tokens.push(Token::new(TokenType::LeftBrace, "}", None, self.line));
             }
             ',' => {
-                self.tokens.push(Token::new(TokenType::Comma, String::from(","), None, self.line));
+                self.tokens.push(Token::new(TokenType::Comma, ",", None, self.line));
             }
             '-' => {
-                self.tokens.push(Token::new(TokenType::Minus, String::from("_"), None, self.line));
+                self.tokens.push(Token::new(TokenType::Minus, "_", None, self.line));
             }
             '+' => {
-                self.tokens.push(Token::new(TokenType::Plus, String::from("+"), None, self.line));
+                self.tokens.push(Token::new(TokenType::Plus, "+", None, self.line));
             }
             ';' => {
-                self.tokens.push(Token::new(TokenType::Semicolon, String::from(";"), None, self.line));
+                self.tokens.push(Token::new(TokenType::Semicolon, ";", None, self.line));
             }
             '*' => {
-                self.tokens.push(Token::new(TokenType::Star, String::from("*"), None, self.line));
+                self.tokens.push(Token::new(TokenType::Star, "*", None, self.line));
             }
             '\n' => self.line +=  1 ,
             'a'..='z' | 'A'..='Z' => self.identifier(),
@@ -96,9 +96,9 @@ impl<'a> Scanner<'a> {
 
         self.advance();
 
-        let source_str = &self.source[self.start + 1..self.current - 1].to_string();
+        let source_str = &self.source[self.start + 1..self.current - 1];
 
-        self.tokens.push(Token::new(TokenType::Str, source_str.clone(), Some(Literal::Str(source_str.clone())), self.line));
+        self.tokens.push(Token::new(TokenType::Str, source_str, Some(Literal::Str(source_str)), self.line));
     }
     pub fn identifier(&mut self ) {
         while self.peek().is_ascii_alphanumeric() || self.peek() == '_' || self.peek() == '"'{
@@ -109,99 +109,99 @@ impl<'a> Scanner<'a> {
          match lexeme {
              "yedi" => {
                  self.tokens.push(Token::new(TokenType::If, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "ra" => {
                  self.tokens.push(Token::new(TokenType::And, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "natra" => {
                  self.tokens.push(Token::new(TokenType::Else, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "false" => {
                  self.tokens.push(Token::new(TokenType::False, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "jhut" => {
                  self.tokens.push(Token::new(TokenType::Fun, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "forr" => {
                  self.tokens.push(Token::new(TokenType::For, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "khali" => {
                  self.tokens.push(Token::new(TokenType::Nil, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "wa" => {
                  self.tokens.push(Token::new(TokenType::Or, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "lekh" => {
                  self.tokens.push(Token::new(TokenType::Print, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "pathau" => {
                  self.tokens.push(Token::new(TokenType::Return, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "satya" => {
                  self.tokens.push(Token::new(TokenType::True, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "value" => {
                  self.tokens.push(Token::new(TokenType::Var, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              "jabasamma" => {
                  self.tokens.push(Token::new(TokenType::While, 
-                         lexeme.to_string(),
+                         lexeme,
                          None,
                          self.line));
              },
 
              _ => {
                  self.tokens.push(Token::new(TokenType::Identifier, 
-                         lexeme.to_string(), 
-                         Some(Literal::Str(lexeme.to_string())), 
+                         lexeme, 
+                         Some(Literal::Str(lexeme)), 
                          self.line));
              }
          }
@@ -215,7 +215,7 @@ impl<'a> Scanner<'a> {
         let parsed_num = &self.source[self.start + 1 ..self.current - 1];
         if let Ok(n) = parsed_num.parse::<f64>() {
         self.tokens.push(Token::new(TokenType::Number, 
-                parsed_num.to_string(), 
+                parsed_num, 
                 Some(Literal::Number(n)), 
                 self.line));
         } else {
@@ -242,3 +242,4 @@ impl<'a> Scanner<'a> {
     }
 
 }
+

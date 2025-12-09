@@ -1,8 +1,8 @@
 //!Gives a simple token structure for creating tokens and token types 
 #[derive(Debug, Clone, PartialEq)]
-pub enum Literal {
+pub enum Literal<'a> {
     Number(f64),
-    Str(String),
+    Str(&'a str),
     Bool(bool),
     Nil,
 }
@@ -57,19 +57,19 @@ pub enum TokenType {
 }
 
 #[derive(Debug, Clone)]
-pub struct Token {
+pub struct Token<'b> {
     pub token_type: TokenType,
-    pub lexeme: String,
-    pub literal: Option<Literal>,
+    pub lexeme: &'b str,
+    pub literal: Option<Literal<'b>>,
     pub line: usize,
 }
 
-impl Token {
+impl<'b> Token<'b> {
     #[must_use]
     pub fn new(
         token_type: TokenType,
-        lexeme: String,
-        literal: Option<Literal>,
+        lexeme:&'b str ,
+        literal: Option<Literal<'b>>,
         line: usize,
     ) -> Self {
         Self {
@@ -131,4 +131,5 @@ impl fmt::Display for TokenType {
         write!(f, "{s}")
     }
 }
+
 
