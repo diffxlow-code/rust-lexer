@@ -1,3 +1,4 @@
+// yema ta kei vannu pardaina hola
 pub use std::env;
 pub use std::fs;
 pub use std::io;
@@ -40,8 +41,8 @@ pub fn run_prompt() {
     loop {
         input_buffer.clear();
         print!("> ");
-
-         match io::stdout().flush() {
+        // flush garda kheri balla print dekhinxa
+        match io::stdout().flush() {
             Ok(n) => n,
             Err(e) => {
                 eprint!("{e}");
@@ -49,6 +50,7 @@ pub fn run_prompt() {
             }
 
         }
+        // yema chai io error auna sakxa
         let n = match io::stdin().read_line(&mut input_buffer) {
             Ok(n) => n,
             Err(e) => {
@@ -56,9 +58,13 @@ pub fn run_prompt() {
                 process::exit(67);
             }
         };
+
+        // 0 bytes read garyo vane eof vanna khojya
         if n == 0 {
             break;
         }
+
+        // '\n' matra trim gareko
         let input_buffer = input_buffer.trim();
         if input_buffer == "quit" || input_buffer == "exit" || input_buffer.is_empty() {
             break;

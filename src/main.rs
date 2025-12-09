@@ -2,6 +2,7 @@ use rlox::process;
 
 fn main() -> Result<(), rlox::io::Error> {
     let args: Vec<String> = rlox::env::args().collect();
+    // yo paxi tira use garamla
     let had_error = false;
     if args.is_empty() {
         println!("Usages : rlox [script]");

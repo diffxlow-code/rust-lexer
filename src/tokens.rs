@@ -23,6 +23,7 @@ pub enum TokenType {
     Star,
 
     /// One or two character tokens
+    /// lexeme hera iniharuko
     Bang,
     BangEqual,
     Equal,
@@ -38,20 +39,20 @@ pub enum TokenType {
     Number,
 
     /// Keywords
-    And,
-    Class,
-    Else,
-    False,
-    Fun,
-    For,
-    If,
-    Nil,
-    Or,
-    Print,
-    Return,
-    True,
-    Var,
-    While,
+    And, /// ra
+    Class, /// not used
+    Else, // natra
+    False, // jhut
+    Fun, // sathi
+    For, // forr
+    If, // yedi
+    Nil, // khali
+    Or, // wa
+    Print, // lekh
+    Return, // pathau
+    True, // satya
+    Var, // value
+    While, // jabasamma
 
     Eof,
 }
@@ -83,6 +84,7 @@ impl<'b> Token<'b> {
 
 use std::fmt;
 
+// ke huda ke dekhaunu parxa
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
