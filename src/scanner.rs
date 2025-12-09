@@ -7,17 +7,17 @@ use crate::tokens::TokenType;
 
 
 #[derive(Debug)]
-pub struct Scanner {
-    pub source: String,
+pub struct Scanner<'a> {
+    pub source: &'a str,
     pub tokens: Vec<Token>,
     pub start: usize,
     pub current: usize,
     pub line: usize,
 }
 
-impl Scanner {
+impl<'a> Scanner<'a> {
     #[must_use]
-    pub fn new(source: String) -> Self {
+    pub fn new(source: &'a str) -> Self {
         Self {
             source,
             tokens: Vec::new(),

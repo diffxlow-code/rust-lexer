@@ -68,7 +68,7 @@ pub fn run_prompt() {
 }
 
 pub fn run(file_content_source: &str) {
-    let mut scanner = Scanner::new(file_content_source.to_string());
+    let mut scanner = Scanner::new(file_content_source);
     let tokens  =  Scanner::scan_tokens(&mut scanner);
 
     for token in tokens {
