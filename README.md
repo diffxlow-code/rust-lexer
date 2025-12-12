@@ -14,7 +14,7 @@ cargo run
 
 To run the lexer on a specific file:
 
-cargo run -- path/to/file
+cargo run path/to/file
 
 Replace path/to/file with the file you want to tokenize.
 
