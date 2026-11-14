@@ -1,25 +1,21 @@
-//! The scanner module is responsible for turning source code into a sequence of
-//! tokens..This is similarly written like the lox interpreter tokenizer
-//! Halka english ta thokny paryo ni
+// inspired from the lox language tokenizer
 use crate::tokens::Literal;
 use crate::err;
 use crate::tokens::Token;
 use crate::tokens::TokenType;
 
-// github ma vako issue hera ani lifetime kina add gareko bujhxau
-#[derive(Debug)] // yo pretty print grada halka sajilo hunxa
+// added liftimes to fix github issue
+#[derive(Debug)] 
 pub struct Scanner<'a> {
-    pub source: &'a str, // yo chai function call garni bela banako original padheko file ko
-                         // content ho
-    pub tokens: Vec<Token<'a>>, // yo hamro output ho .. yeima iterate garera tokens haru print
-                                // garne ho
+    pub source: &'a str, 
+    pub tokens: Vec<Token<'a>>, // output tokens
     pub start: usize, 
-    pub current: usize, // string slice ko kun character ma aayim vanxa
+    pub current: usize,
     pub line: usize,
 }
 
 impl<'a> Scanner<'a> {
-    // naya scanner banaune
+    
     #[must_use]
     pub fn new(source: &'a str) -> Self {
         Self {
@@ -31,7 +27,6 @@ impl<'a> Scanner<'a> {
         }
     }
 
-    // scanner banayepaxi token scan garna use hune function
     pub fn scan_tokens(&mut self) -> Vec<Token<'a>> {
         while !self.is_at_end() {
             self.start = self.current;
@@ -42,20 +37,18 @@ impl<'a> Scanner<'a> {
         self.tokens.clone()
     }
     
-    // source_str padkim kinai ?
+    // did we read source_str ?
     pub fn is_at_end(&mut self) -> bool {
         self.current >= self.source.len()
     }
     
 
-    // hya samma comment padhiraxau vane legend
     pub fn scan_token(&mut self) {
         let  character = self.advance();
         match character {
-            ' ' | '\r' | '\t'  => {}, // whitespace,tab ko lagi
+            ' ' | '\r' | '\t'  => {}, // whitespace,tab
 
             '(' => {
-                // malai yo function ma rakhna jhau matra lako ho
                 self.tokens.push(Token::new(TokenType::LeftParen, "(", None, self.line)); 
                                                                                                         
             }
@@ -123,16 +116,12 @@ impl<'a> Scanner<'a> {
                     self.tokens.push(Token::new(TokenType::Less, "<=", None, self.line));
                 } 
             }
-            '\n' => self.line +=  1 ,// new line vayepaxi self.line ma 1 add garne
-            'a'..='z' | 'A'..='Z' => self.identifier(), // yema keyword match garxam ani macth
-                                                        // vayena vane identifier ho vanne declare
-                                                        // gardinxum
-            '0'..='9' => self.number(), // sabbai soucre code string ma padkheko vayera yesto garnu
-                                        // parkeo parsed_num le yo fix gardihalxa
-            '"' => self.scan_string_literal(), // yo "" ma vayeko text extract garna
+            '\n' => self.line +=  1 ,
+            'a'..='z' | 'A'..='Z' => self.identifier(), // all keyword and identifier code goes here
+            '0'..='9' => self.number(),
+            '"' => self.scan_string_literal(), 
             _ => {
-                err(self.line, "No such character exists"); // character ascii range ma
-                                                                     // xaina ,wa invalid token ho
+                err(self.line, "No such character exists"); 
             }
         }
     }
@@ -157,18 +146,14 @@ impl<'a> Scanner<'a> {
     }
 
     pub fn identifier(&mut self ) {
-        // is_ascii_alphanumeric le valid alphabetic wa space wa kei ho vanera chinxa
+       
         while self.peek().is_ascii_alphanumeric() || self.peek() == '_' || self.peek() == '"'{ 
             self.advance();
         }
 
-        let lexeme = &self.source[self.start..self.current]; // aile samma detect garkeo
-                                                                   // keyword
-        // keyword match garne aba (ramailo part)
+        let lexeme = &self.source[self.start..self.current]; // string slice of current lexeme
+        // will be efficient to use a static string map
         match lexeme {
-
-
-            // yo ta bujhxau hola ni
             "yedi" => {
                 self.tokens.push(Token::new(TokenType::If, 
                         lexeme,
@@ -275,7 +260,7 @@ impl<'a> Scanner<'a> {
             self.advance();
         }
         let parsed_num = &self.source[self.start..self.current];
-        // yedi parsed_num valid vayo vane vayo natra err report garne
+        // the sliced string is instantly parsed into a number
         if let Ok(n) = parsed_num.parse::<f64>() {
             self.tokens.push(Token::new(TokenType::Number, 
                     parsed_num, 
@@ -287,7 +272,6 @@ impl<'a> Scanner<'a> {
     }
     
 
-    // aba next aune character lai read garne but not consume
     pub fn peek(&mut self ) -> char  {
         if self.is_at_end() {
             '\0'
